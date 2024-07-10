@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+
+import os
+
+os.system("printf '\033]2;Phonia Toolkit\a'")
+
+import sys
+import signal
+import time
+from lib.args import args
+from lib.args import parser
+from lib.output import *
+from lib.format import *
+from lib.logger import Logger
+from lib.googlesearch import closeBrowser
+import scanners.numverify as numverify
+import scanners.localscan as localscan
+import scanners.recon as recon
+import scanners.ovh as ovh
+from scanners.footprints import osintScan
+
+def scanNumber(InputNumber):
+    os.system("clear")
+    os.system("echo")
+    os.system("cat banner/banner.txt")
+    os.system("echo")
+    time.sleep(3)
+    test("Fetching information for {}...".format(formatNumber(InputNumber)))
+    time.sleep(5)
+
+    number = localscan.scan(InputNumber)
+
+    if not number:
+        throw(("An error occured parsing {}!".format(
+            formatNumber(InputNumber))))
+
+    numverify.scan(number['default'])
+    ovh.scan(number['local'], number['countryIsoCode'])
+    recon.scan(number)
+    osintScan(number)
+
+    A = '\033[1;77m'
+    W = '\033[0m'
+    E = '\033[0m'
+    print(A+'[i]'+W+' Scan completed.'+E)
+
+def main():
+    scanners = ['any', 'all', 'numverify', 'ovh', 'footprints']
+    
+    if args.update:
+        os.system("chmod +x bin/phonia && bin/phonia -u")
+        sys.exit()
+
+    # If any param is passed, execute help command
+    if not len(sys.argv) > 1:
+        parser.print_help()
+        sys.exit()
+
+    if args.outputfile:
+        sys.stdout = Logger()
+
+    if args.version:
+        print("")
+        os.system("cat banner/banner.txt")
+        print("")
+        print("Phonia Toolkit v4.0")
+        sys.exit()
+        
+    # Verify scanner option
+    if not args.scanner in scanners:
+        throw(("Scanner: "+args.scanner+": does not exist!"))
+        sys.exit()
+
+    if args.phone:
+        scanNumber(args.phone)
+        
+    elif args.inputfile:
+        run = args.inputfile
+   
+        w = os.environ['OLDPWD']
+        os.chdir(w)
+        if os.path.exists(run):
+            if os.path.isdir(run):
+                throw(("Error: "+run+": is a directory!"))
+                g = os.environ['HOME']
+                os.chdir(g + "/phonia")
+                sys.exit()
+        else:
+            throw(("Input file: "+run+": does not exist!"))
+            g = os.environ['HOME']
+            os.chdir(g + "/phonia")
+            sys.exit()
+
+        run = open(run)
+        g = os.environ['HOME']
+        os.chdir(g + "/phonia")
+
+        for line in run.readlines():
+            scanNumber(line)
+    else:
+        parser.print_help()
+        sys.exit()
+
+    if args.outputfile:
+        fileout = Logger()
+        fileout.close_file()
+
+    closeBrowser()
+
+def signal_handler(signal, frame):
+    A = '\033[1;33m'
+    W = '\033[0m'
+    E = '\033[0m'
+    fileout = Logger()
+    fileout.close_file()
+    print(A+'\n[!]'+W+' Scan terminated.'+E)
+    closeBrowser()
+    sys.exit()
+
+if __name__ == '__main__':
+    signal.signal(signal.SIGINT, signal_handler)
+    main()

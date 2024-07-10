@@ -1,0 +1,42 @@
+[
+  {
+    "site": "facebook.com",
+    "request": "site:\"facebook.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "twitter.com",
+    "request": "site:\"twitter.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "linkedin.com",
+    "request": "site:\"linkedin.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "instagram.com",
+    "request": "site:\"instagram.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "gmail.com",
+    "request": "site:\"gmail.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "youtube.com",
+    "request": "site:\"youtube.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "twitch.tv",
+    "request": "site:\"twitch.tv\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  },
+  {
+    "site": "yahoo.com",
+    "request": "site:\"yahoo.com\" \"$i\" OR \"$n\" OR \"$l\"",
+    "stop": 5
+  }
+]
